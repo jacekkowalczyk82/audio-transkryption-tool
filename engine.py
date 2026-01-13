@@ -2,7 +2,8 @@ import os
 from faster_whisper import WhisperModel
 
 class TranscribeEngine:
-    def __init__(self, model_size="base"):
+    def __init__(self, model_size="medium"):
+        # model_size can be "base", "small", "medium", "large-v2", "large-v3"
         # Set device="cpu" for universality (will work on any PC)
         self.model = WhisperModel(model_size, device="cpu", compute_type="int8")
 
