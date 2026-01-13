@@ -1,11 +1,21 @@
 import os
+import sys
 from faster_whisper import WhisperModel
 
 class TranscribeEngine:
     def __init__(self, model_size="medium"):
         # model_size can be "base", "small", "medium", "large-v2", "large-v3"
-        # Set device="cpu" for universality (will work on any PC)
-        self.model = WhisperModel(model_size, device="cpu", compute_type="int8")
+        
+        # Check if running as PyInstaller OneFile
+        if getattr(sys, 'frozen', False):
+            # If frozen, looking for model in the temp bundle directory
+            model_path = os.path.join(sys._MEIPASS, "whisper_model")
+            print(f"Loading model from bundled path: {model_path}")
+            self.model = WhisperModel(model_path, device="cpu", compute_type="int8")
+        else:
+            # Normal run, load from cache/download
+            # Set device="cpu" for universality (will work on any PC)
+            self.model = WhisperModel(model_size, device="cpu", compute_type="int8")
 
     def transcribe(self, file_path):
         if not os.path.exists(file_path):
