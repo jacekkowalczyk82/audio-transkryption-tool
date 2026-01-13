@@ -8,10 +8,10 @@ class TranscribeGUI:
         self.root.title("TranscribeToolbox")
         self.engine = TranscribeEngine()
 
-        self.label = tk.Label(root, text="Wybierz plik do transkrypcji:")
+        self.label = tk.Label(root, text="Select file to transcribe:")
         self.label.pack(pady=10)
 
-        self.btn_select = tk.Button(root, text="Wybierz Audio", command=self.select_file)
+        self.btn_select = tk.Button(root, text="Select Audio", command=self.select_file)
         self.btn_select.pack(pady=5)
 
         self.text_area = tk.Text(root, height=10, width=50)
@@ -21,7 +21,7 @@ class TranscribeGUI:
         file_path = filedialog.askopenfilename()
         if file_path:
             self.text_area.delete(1.0, tk.END)
-            self.text_area.insert(tk.END, "Przetwarzanie... proszę czekać.")
+            self.text_area.insert(tk.END, "Processing... please wait.")
             self.root.update()
             
             result = self.engine.transcribe(file_path)
