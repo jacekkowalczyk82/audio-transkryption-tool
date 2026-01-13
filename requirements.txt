@@ -1,0 +1,5 @@
+pyinstaller
+faster_whisper
+sounddevice
+scipy
+numpy
