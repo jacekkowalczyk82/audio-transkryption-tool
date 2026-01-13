@@ -1,5 +1,2 @@
-pyinstaller
-faster_whisper
-sounddevice
-scipy
-numpy
+faster-whisper
+customtkinter

@@ -1,3 +1,4 @@
+import customtkinter as ctk
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from engine import TranscribeEngine
@@ -16,22 +17,22 @@ class TranscribeGUI:
         self.root.title("TranscribeToolbox")
         self.engine = TranscribeEngine()
 
-        self.label = tk.Label(root, text="Select file to transcribe:")
+        self.label = ctk.CTkLabel(root, text="Select file to transcribe:", font=("Arial", 16))
         self.label.pack(pady=10)
 
-        self.btn_select = tk.Button(root, text="Select Audio", command=self.select_file)
+        self.btn_select = ctk.CTkButton(root, text="Select Audio", command=self.select_file)
         self.btn_select.pack(pady=5)
 
-        self.text_area = tk.Text(root, height=10, width=50)
+        self.text_area = ctk.CTkTextbox(root, height=200, width=500)
         self.text_area.pack(pady=10)
 
-        self.btn_record = tk.Button(root, text="Record Audio", command=self.record_audio)
+        self.btn_record = ctk.CTkButton(root, text="Record Audio", command=self.record_audio)
         self.btn_record.pack(pady=5)
 
-        self.btn_transcribe = tk.Button(root, text="Transcribe", command=self.transcribe)
+        self.btn_transcribe = ctk.CTkButton(root, text="Transcribe", command=self.transcribe)
         self.btn_transcribe.pack(pady=5)
 
-        self.btn_exit = tk.Button(root, text="Exit", command=self.root.quit)
+        self.btn_exit = ctk.CTkButton(root, text="Exit", command=self.root.quit, fg_color="red", hover_color="darkred")
         self.btn_exit.pack(pady=5)
 
     def get_new_audio_file_name(self):

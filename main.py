@@ -1,7 +1,11 @@
 import sys
-import tkinter as tk
+import customtkinter as ctk
 from cli_handler import run_cli
 from gui_handler import TranscribeGUI
+
+# Set customtkinter theme
+ctk.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
+ctk.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
 def main():
     # If arguments are provided in console -> run CLI
@@ -10,7 +14,7 @@ def main():
         run_cli()
     else:
         # Otherwise -> run GUI
-        root = tk.Tk()
+        root = ctk.CTk()
         app = TranscribeGUI(root)
         root.mainloop()
 
