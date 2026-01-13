@@ -58,6 +58,7 @@ class TranscribeGUI:
             result = self.engine.transcribe(file_path)
             self.text_area.delete(1.0, tk.END)
             self.text_area.insert(tk.END, result)
+            self._save_transcription(file_path, result)
     
     def toggle_recording(self):
         if not self.is_recording:
@@ -105,6 +106,16 @@ class TranscribeGUI:
         self.text_area.delete(1.0, tk.END)
         self.text_area.insert(tk.END, result)
         self.root.update()
+        self._save_transcription(self.last_recorded_audio, result)
+
+    def _save_transcription(self, audio_path, text):
+        try:
+            output_name = os.path.splitext(audio_path)[0] + ".txt"
+            with open(output_name, "w", encoding="utf-8") as f:
+                f.write(text)
+            self.text_area.insert(tk.END, f"\n\nTranscription saved to: {output_name}")
+        except Exception as e:
+            self.text_area.insert(tk.END, f"\n\nError saving transcription: {e}")
 
 
         
