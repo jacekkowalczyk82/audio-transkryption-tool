@@ -92,6 +92,10 @@ class TranscribeGUI:
                 
                 # Update UI from main thread (scheduled)
                 self.root.after(0, lambda: self.text_area.insert(tk.END, f"\nRecording saved: {self.last_recorded_audio}"))
+                
+                # Schedule auto-transcription
+                self.root.after(0, lambda: self.text_area.insert(tk.END, "\nAuto-transcription starting in 5 seconds..."))
+                self.root.after(5000, self.transcribe)
         except Exception as e:
             self.root.after(0, lambda: self.text_area.insert(tk.END, f"\nError recording: {e}"))
             self.is_recording = False
@@ -99,9 +103,11 @@ class TranscribeGUI:
 
     
     def transcribe(self):
+        self.text_area.insert(tk.END, "\n\nAuto-transcription starting... now!")
+        self.root.update()
         # use TranscribeEngine
         result = self.engine.transcribe(self.last_recorded_audio)
-        self.text_area.insert(tk.END, "Processing... please wait.")
+        self.text_area.insert(tk.END, "\nProcessing... please wait.")
         self.root.update()
         self.text_area.delete(1.0, tk.END)
         self.text_area.insert(tk.END, result)
