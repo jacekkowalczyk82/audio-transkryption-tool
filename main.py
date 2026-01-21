@@ -1,6 +1,6 @@
 import sys
 import customtkinter as ctk
-from cli_handler import run_cli
+from cli_handler import run_cli, run_create_note
 from gui_handler import TranscribeGUI
 
 # Set customtkinter theme
@@ -12,6 +12,9 @@ def main():
     if len(sys.argv) > 1 and sys.argv[1] == "--cli":
         sys.argv.pop(1)
         run_cli()
+    elif len(sys.argv) > 1 and sys.argv[1] == "--create-note":
+        sys.argv.pop(1)
+        run_create_note()
     else:
         # Otherwise -> run GUI
         root = ctk.CTk()

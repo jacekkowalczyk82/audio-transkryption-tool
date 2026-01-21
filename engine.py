@@ -42,3 +42,24 @@ class TranscribeEngine:
             results.append((file, output_name))
         
         return results
+    
+    def create_note(self, text):
+        import datetime
+        now = datetime.datetime.now()
+        note_name = f"note_{now.strftime('%Y%m%d_%H%M%S')}_{self._create_note_name_prefix_short(text)}.md"
+        with open(note_name, "w", encoding="utf-8") as f:
+            f.write(f"# Note {now.strftime('%Y%m%d_%H%M%S')}\n\n")
+            f.write(f"Short title: {self._create_note_name_prefix_short(text)}\n\n")
+            f.write(f"*Transcription full text:*\n\n")
+            f.write(text)
+            f.write(f"\n\n*End of transcription*")
+            f.write(f"\n\n*Note created by Audio Transcriber*")
+            f.write(f"\n\n*Note created at: {now.strftime('%Y%m%d_%H%M%S')}*")
+            f.write(f"\n\n*Note created in folder: {os.getcwd()}*")
+
+        return note_name
+
+    def _create_note_name_prefix_short(self, text):
+        # select 5 first words of the text and remove special characters
+        # return "_".join(text.split()[:5]).replace("-", "_").replace(" ", "_").replace(".", "_").replace(",", "_").replace("!", "_").replace("?", "_").replace("'", "_").replace("\"", "_").replace("/", "_").replace("\\", "_").replace("|", "_").replace("*", "_").replace('#', "_").replace("$", "_").replace("%", "_").replace("^", "_").replace("&", "_").replace("(", "_").replace(")", "_").replace("+", "_").replace("=", "_").replace("[", "_").replace("]", "_").replace("{", "_").replace("}", "_").replace("<", "_").replace(">", "_").replace(";", "_").replace(":", "_").replace("\n", "_").replace("\t", "_").replace("\r", "_").replace("\b", "_").replace("\f", "_").replace("\v", "_").replace("\a", "_").replace("\e", "_").replace("\c", "_").replace("\d", "_").replace("\o", "_").replace("\x", "_").replace("\u", "_").replace("\U", "_").replace("\N", "_").replace("\\", "_")
+        return "_".join(text.split()[:5]).replace("-", "_").replace(" ", "_").replace(".", "_").replace(",", "_").replace("!", "_").replace("?", "_").replace("'", "_").replace("\"", "_").replace("/", "_").replace("\\", "_").replace("|", "_").replace("*", "_").replace('#', "_").replace("$", "_").replace("%", "_").replace("^", "_").replace("&", "_").replace("(", "_").replace(")", "_").replace("+", "_").replace("=", "_").replace("[", "_").replace("]", "_").replace("{", "_").replace("}", "_").replace("<", "_").replace(">", "_").replace(";", "_").replace(":", "_").replace("\n", "_").replace("\t", "_").replace("\r", "_").replace("\\", "_")
