@@ -1,5 +1,5 @@
 # audio-transkryption-tool
-Audio transkryption to text tool 
+Audio transkryption to text tool.the application allows to record audio note which will be automatically transcribed to text. Instead of typing on the keyboard you can talk to your computer. 
 
 ## Development env 
 
