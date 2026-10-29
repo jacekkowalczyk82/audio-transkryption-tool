@@ -12,13 +12,21 @@ pip install -r requirements.txt
 ## Usage
 
 ```bash
-python main.py --cli  --file path/to/file.mp3
-python main.py --cli  --dir path/to/folder
+python main.py --cli  --file path/to/file.mp3 --lang pl
+python main.py --cli  --dir path/to/folder --lang en
 
 # to run with gui 
 python main.py
-
 ```
+
+The `--lang` option accepts `pl` (Polish) or `en` (English) and defaults to
+Polish. In the GUI, choose the transcription language from the menu before
+selecting a file or recording audio. To record a note from the CLI, use
+`python main.py --create-note --lang en` (or `pl`).
+
+## dyktafon
+
+/home/jacek/git/audio-transkryption-tool/transcribe-all.sh
 
 ## Building Executable
 

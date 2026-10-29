@@ -23,6 +23,15 @@ class TranscribeGUI:
         self.label = ctk.CTkLabel(root, text="Select file to transcribe:", font=("Arial", 16))
         self.label.pack(pady=10)
 
+        self.language_label = ctk.CTkLabel(root, text="Transcription language:")
+        self.language_label.pack(pady=5)
+
+        self.language_menu = ctk.CTkOptionMenu(
+            root,
+            values=["Polski", "English"],
+        )
+        self.language_menu.pack(pady=5)
+
         self.btn_select = ctk.CTkButton(root, text="Select Audio", command=self.select_file)
         self.btn_select.pack(pady=5)
 
@@ -48,6 +57,9 @@ class TranscribeGUI:
         now = datetime.datetime.now()
         return f"recorded_audio_{now.strftime('%Y%m%d_%H%M%S')}.wav"
 
+    def _selected_language(self):
+        return {"Polski": "pl", "English": "en"}[self.language_menu.get()]
+
     def select_file(self):
         file_path = filedialog.askopenfilename()
         if file_path:
@@ -55,7 +67,7 @@ class TranscribeGUI:
             self.text_area.insert(tk.END, "Processing... please wait.")
             self.root.update()
             
-            result = self.engine.transcribe(file_path)
+            result = self.engine.transcribe(file_path, self._selected_language())
             self.text_area.delete(1.0, tk.END)
             self.text_area.insert(tk.END, result)
             self._save_transcription(file_path, result)
@@ -106,7 +118,9 @@ class TranscribeGUI:
         self.text_area.insert(tk.END, "\n\nAuto-transcription starting... now!")
         self.root.update()
         # use TranscribeEngine
-        result = self.engine.transcribe(self.last_recorded_audio)
+        result = self.engine.transcribe(
+            self.last_recorded_audio, self._selected_language()
+        )
         self.text_area.insert(tk.END, "\nProcessing... please wait.")
         self.root.update()
         self.text_area.delete(1.0, tk.END)

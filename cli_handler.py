@@ -8,9 +8,12 @@ import numpy as np
 from scipy.io.wavfile import write
 import os
 
+from engine import SUPPORTED_LANGUAGES
+
 
 is_recording = False
 last_recorded_audio = None
+recording_language = "pl"
 
 FS = 44100  # Probing frequency
 
@@ -19,19 +22,26 @@ def run_cli():
     parser = argparse.ArgumentParser(description="TranscribeToolbox - CLI & Batch")
     parser.add_argument("--file", help="Path to single audio file")
     parser.add_argument("--dir", help="Path to folder (Batch mode)")
+    parser.add_argument(
+        "--lang",
+        choices=SUPPORTED_LANGUAGES,
+        default="pl",
+        help="Transcription language (default: pl)",
+    )
     
     args = parser.parse_args()
     engine = TranscribeEngine()
 
     if args.file:
-        result = engine.transcribe(args.file)
+        result = engine.transcribe(args.file, args.lang)
         print(f"\nTranscription result:\n{result}")
     elif args.dir:
         print(f"Starting processing folder: {args.dir}")
-        processed = engine.batch_process(args.dir)
+        processed = engine.batch_process(args.dir, args.lang)
         print(f"Finished! Processed files: {len(processed)}")
     else:
         parser.print_help()
+
 
 def _record_loop():
     global last_recorded_audio
@@ -56,7 +66,7 @@ def _record_loop():
             # Schedule auto-transcription
             print("\nAuto-transcription starting in 5 seconds...")
             time.sleep(5)
-            transcribe(last_recorded_audio)
+            transcribe(last_recorded_audio, recording_language)
     except Exception as e:
         print(f"\nError recording: {e}")
         is_recording = False
@@ -69,11 +79,22 @@ def get_new_audio_file_name():
     return f"recorded_audio_{now.strftime('%Y%m%d_%H%M%S')}.wav"   
 
 def run_create_note():
+    parser = argparse.ArgumentParser(description="Record and transcribe a note")
+    parser.add_argument(
+        "--lang",
+        choices=SUPPORTED_LANGUAGES,
+        default="pl",
+        help="Transcription language (default: pl)",
+    )
+    args = parser.parse_args()
+
     global is_recording
+    global recording_language
     # this function will start recording and wait for user to stop it, using interactive prompt in CLI
 
     # this function will create a note from transcrbed audio file
     
+    recording_language = args.lang
     is_recording = True
     recording_thread = threading.Thread(target=_record_loop)
     recording_thread.start()
@@ -87,10 +108,10 @@ def run_create_note():
     recording_thread.join()
 
 
-def transcribe(audio_path):
+def transcribe(audio_path, language):
     # use TranscribeEngine
     engine = TranscribeEngine()
-    result = engine.transcribe(audio_path)
+    result = engine.transcribe(audio_path, language)
     print("\nProcessing... please wait.")
     _save_transcription(audio_path, result, engine)
 
@@ -106,4 +127,3 @@ def _save_transcription(audio_path, text, engine):
         print(f"\n\nNote saved to: {note_name}")
     except Exception as e:
         print(f"\n\nError saving transcription: {e}")
-

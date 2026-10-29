@@ -2,6 +2,9 @@ import os
 import sys
 from faster_whisper import WhisperModel
 
+SUPPORTED_LANGUAGES = ("pl", "en")
+
+
 class TranscribeEngine:
     def __init__(self, model_size="medium"):
         # model_size can be "base", "small", "medium", "large-v2", "large-v3"
@@ -17,15 +20,23 @@ class TranscribeEngine:
             # Set device="cpu" for universality (will work on any PC)
             self.model = WhisperModel(model_size, device="cpu", compute_type="int8")
 
-    def transcribe(self, file_path):
+    def transcribe(self, file_path, language="pl"):
+        if language not in SUPPORTED_LANGUAGES:
+            raise ValueError(
+                f"Unsupported language '{language}'. Choose one of: "
+                f"{', '.join(SUPPORTED_LANGUAGES)}."
+            )
+
         if not os.path.exists(file_path):
             return "Error: File does not exist."
         
-        segments, _ = self.model.transcribe(file_path, beam_size=5, language="pl")
+        segments, _ = self.model.transcribe(
+            file_path, beam_size=5, language=language
+        )
         text = " ".join([segment.text for segment in segments])
         return text.strip()
 
-    def batch_process(self, folder_path):
+    def batch_process(self, folder_path, language="pl"):
         supported_ext = ('.mp3', '.wav', '.m4a', '.flac')
         results = []
         
@@ -33,7 +44,7 @@ class TranscribeEngine:
         for file in files:
             full_path = os.path.join(folder_path, file)
             print(f"Processing: {file}...")
-            text = self.transcribe(full_path)
+            text = self.transcribe(full_path, language)
             
             # Save result to .txt file with the same name
             output_name = os.path.splitext(full_path)[0] + ".txt"
